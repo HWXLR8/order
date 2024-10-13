@@ -138,7 +138,7 @@ class UI:
         popup = tk.Toplevel()
         popup.title("Update IP Address")
         popup.geometry("300x100")
-        popup.attributes('-type', 'dialog')
+        # popup.attributes('-type', 'dialog')
 
         ip_label = tk.Label(popup, text="Enter new IP address:")
         ip_label.pack(pady=5)
