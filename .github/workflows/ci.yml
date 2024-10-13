@@ -1,0 +1,28 @@
+on: [push, pull_request]
+name: CI/CD
+jobs:
+  order:
+    name: Build executable
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller python-escpos
+
+      - name: Run pyinstaller
+        run: |
+          pyinstaller --onefile --noconsole --add-data "logo.png:." --add-data "config.ini:." --collect-data escpos order.py
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: order
+          path: dist/order.exe
