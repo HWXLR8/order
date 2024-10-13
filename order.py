@@ -2,6 +2,8 @@
 
 import configparser
 import tkinter as tk
+import os
+import sys
 import time
 from escpos.printer import Network
 
@@ -99,7 +101,7 @@ class UI:
         currenttime = time.strftime('%X')
 
         self.p.open()
-        self.p.image("logo.png")
+        self.p.image(resource_path("logo.png"))
         self.p.set(u'left')
         self.p.text("\n"*2)
 
@@ -147,8 +149,13 @@ class UI:
 
 def read_config():
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read(resource_path('config.ini'))
     return config
+
+def resource_path(path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, path)
+    return os.path.join(os.path.abspath("."), path)
 
 WIDTH = 48 # width of receipt in chars
 IP = read_config()['printer']['ip']
