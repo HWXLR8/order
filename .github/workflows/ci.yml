@@ -19,7 +19,7 @@ jobs:
 
       - name: Run pyinstaller
         run: |
-          pyinstaller --onefile --noconsole --add-data "logo.png:." --add-data "config.ini:." --collect-data escpos order.py
+          pyinstaller --onefile --noconsole --add-data "logo.png:." --collect-data escpos order.py
 
       - name: Upload executable
         uses: actions/upload-artifact@v4
