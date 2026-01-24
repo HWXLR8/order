@@ -113,42 +113,51 @@ class UI:
 
     def sendprint(self, event=0):
         if not self.p:
-            messagebox.showerror(
-                "Printer IP not set",
-                "No printer IP is configured.\nPress Alt-I to set the IP address.",
-            )
+            messagebox.showerror("Printer IP not set", "No printer IP is configured.\nPress Alt-I to set the IP address.")
             return
 
         name = self.namebox.get().upper()
         cust = self.cnamebox.get().upper()
         text = self.textbox.get("1.0", tk.END).upper()
-        self.textbox.delete("1.0", tk.END)
-        self.cnamebox.delete(0, tk.END)
         currenttime = time.strftime("%X")
 
-        self.p.open()
-        self.p.image(resource_path("logo.png"))
-        self.p.set(u"left")
-        self.p.text("\n" * 2)
+        try:
+            self.p.open()
+            self.p.image(resource_path("logo.png"))
+            self.p.set("left")
+            self.p.text("\n"*2)
 
-        # pickup location
-        if self.pickupvar.get():
-            self.p.text("PICKUP: FRONT\n\n")
-        else:
-            self.p.text("PICKUP: BACK\n\n")
+            if self.pickupvar.get():
+                self.p.text("PICKUP: FRONT\n\n")
+            else:
+                self.p.text("PICKUP: BACK\n\n")
 
-        if cust:
-            self.p.text("CUSTOMER NAME: ")
-            self.p.text(cust + "\n")
-            self.p.text("_" * 48)
-            self.p.text("\n" * 2)
+            if cust:
+                self.p.text("CUSTOMER NAME: ")
+                self.p.text(cust + "\n")
+                self.p.text("_"*48)
+                self.p.text("\n"*2)
 
-        self.p.text(text)
-        self.p.text("\n" * 10)
-        self.p.text("SENT BY " + name + " @ " + currenttime)
-        self.p.cut(mode="PART")
-        self.p.buzzer(times=3, duration=5)
-        self.p.close()
+            self.p.text(text)
+            self.p.text("\n"*10)
+            self.p.text("SENT BY " + name + " @ " + currenttime)
+            self.p.cut(mode="PART")
+            self.p.buzzer(times=3, duration=5)
+
+        except Exception as e:
+            messagebox.showerror("Printer error", f"Could not print.\n\n{e}")
+            return
+
+        finally:
+            try:
+                self.p.close()
+            except Exception:
+                pass
+
+        # only clear after a successful print
+        self.textbox.delete("1.0", tk.END)
+        self.cnamebox.delete(0, tk.END)
+
 
     def update_ip(self, event=0):
         def save_ip():
