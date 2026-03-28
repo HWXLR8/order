@@ -266,12 +266,7 @@ class UI:
             return
 
         index = selection[0]
-        # Get the actual index in history (display shows last 10)
-        actual_index = len(self.history) - 10 + index
-        if actual_index < 0:
-            actual_index = index
-
-        order = self.history[actual_index]
+        order = self.history[index]
 
         # Restore fields
         self.namebox.delete(0, tk.END)
